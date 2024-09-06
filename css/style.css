@@ -1,14 +1,75 @@
-.cal{
-    background-color:#4DA390;
+.cal {
+    background-color: #4DA390;
     margin: auto;
+    padding-bottom: 10px;
     margin-top: 5%;
+    border:2px solid #0a2a23;
     text-align: center;
     border-radius: 15px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
-.display{
+.displaycal{
+    position: absolute;
+    text-align: right;
+    top: 75px;
+    right: 460px;
+}
+.display {
     background-color: #D0ED77;
     border-radius: 5px;
     text-align: right;
-
+    padding:25px 22px ;
+    font-size: 30px;
+    border: 2px solid #176251;
+}
+.btn{
+    width: 90px;
+    height: 54px;
+    display: inline-block;
+    margin: 5px;
+    padding: 15px 30px;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color:#e9f4f1;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #030e0c61;
+}
+.actionBtn {
+    background-color:#0a2a23;
+}
+.funBtn{
+    background-color:#176251;
+}
+.actionBtn:hover {
+    background-color: #203732
+}
+.actionBtn:active {
+    background-color: #13211e;
+    box-shadow: 0 5px #030e0c61;
+    transform: translateY(4px);
+}
+.funBtn:hover {
+    background-color: #2e7162;
+}
+.funBtn:active {
+    background-color: #122d27;
+    box-shadow: 0 5px #030e0c61;
+    transform: translateY(4px);
+}
+.icon{
+    width: 40px;
+    height: 40px;
+   
+}
+.made{
+    margin-left: 20px;
+    margin-top: 15px;
+}
+.image{
+    position: absolute;
+    text-align: right;
 }

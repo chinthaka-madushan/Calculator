@@ -1,24 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <table class="cal">
         <tr>
             <td>
-                calculator
+                _________ Calculator _________
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" class="display" value="123456">
+                <h3 class="displaycal" id="displaycal">12*12</h3>
+                <input type="text" class="display" id="display" value="144">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" id="btnAcOnAction" class="actionBtn btn" value="AC">
+                <input type="button" id="btnDelOnAction" class="actionBtn btn" value="DEL">
+                <input type="button" id="btnPiOnAction" class="funBtn btn" value="pi">
+                <input type="button" id="btnFacOnAction" class="actionBtn btn" value="fac">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" id="btn7OnAction" class="funBtn btn" value="7">
+                <input type="button" id="btn8OnAction" class="funBtn btn" value="8">
+                <input type="button" id="btn9OnAction" class="funBtn btn" value="9">
+                <input type="button" id="btnDivisionOnAction" class="actionBtn btn" value="/">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" id="btn4OnAction" class="funBtn btn" value="4">
+                <input type="button" id="btn5OnAction" class="funBtn btn" value="5">
+                <input type="button" id="btn6OnAction" class="funBtn btn" value="6">
+                <input type="button" id="btnMultiplicationOnAction" class="actionBtn btn" value="*">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" id="btn1OnAction" class="funBtn btn" value="1">
+                <input type="button" id="btn2OnAction" class="funBtn btn" value="2">
+                <input type="button" id="btn3OnAction" class="funBtn btn" value="3">
+                <input type="button" id="btnAdditionOnAction" class="actionBtn btn" value="+">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" id="btn00OnAction" class="funBtn btn" value="00">
+                <input type="button" id="btn0OnAction" class="funBtn btn" value="0">
+                <input type="button" id="btnDotOnAction" class="funBtn btn" value=".">
+                <input type="button" id="btnSubtractionOnAction" class="actionBtn btn" value="-">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="image">
+                    <h4 class="made"><img src="img/Artboard.png" class="icon" alt="">made in sri lanka</h4>
+                </div>
+                <input type="button" class="actionBtn btn" style="width: 150px; height: 54px; margin-left: 255px;" ;
+                    value="Enter">
+
             </td>
         </tr>
     </table>
     <script src="app.js"></script>
+    <script src="https://kit.fontawesome.com/4c3d84c05e.js" crossorigin="anonymous"></script>
 </body>
+
 </html>
