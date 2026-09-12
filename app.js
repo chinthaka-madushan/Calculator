@@ -1,112 +1,369 @@
-btnAcOnAction
-btnDelOnAction
-btnPiOnAction
-btnFacOnAction
-btn7OnAction
-btn8OnAction
-btn9OnAction
-btnDivisionOnAction
-btn4OnAction
-btn5OnAction
-btn6OnAction
-btnMultiplicationOnAction
-btnAdditionOnAction
-btnSubtractionOnAction
-
 let number1 = 0;
 let number2 = 0;
-let finalNumber;
+let finalNumber = 0;
 let action = "";
-function calculate(){
-    switch(action){
-        case "D" : finalNumber = number1/number2; break;
-        case "M" : finalNumber = number1*number2; break;
-        case "A" : finalNumber = number1+number2; break;
-        case "S" : finalNumber = number1-number2; break;
-    }
-    
-}
-function setNumber1(){
-    number1 = Number(document.getElementById("display").value);
-    document.getElementById("display").value = "";
-}
-function setNumber2(){
-    number2 = Number(document.getElementById("display").value);
 
-    
-    document.getElementById("display").value = "";
+function getDisplay() {
+    return document.getElementById("display");
 }
-function setfinalNumber(){
-    document.getElementById("display").value = finalNumber;
+
+function addNumber(number) {
+    let display = getDisplay();
+
+    if (display.value === "Error") {
+        display.value = "";
+    }
+
+    display.value += number;
 }
-//==================================================resalt btn
-function btnEnter(){
-    setNumber2();
-    calculate();
-    setfinalNumber();
+
+function btnAc() {
+    let display = getDisplay();
+
+    display.value = "";
+    number1 = 0;
+    number2 = 0;
+    finalNumber = 0;
+    action = "";
 }
-//==========================================================================btn calc
-function btnDivision(){
-    setNumber1();
-    action = "D";
+
+function btnDel() {
+    let display = getDisplay();
+
+    if (display.value === "Error") {
+        display.value = "";
+        return;
+    }
+
+    display.value = display.value.slice(0, -1);
 }
-function btnMultiplication(){
-    setNumber1();
-    action = "M";
+
+function btnDivision() {
+    addOperator("/");
 }
-function btnAddition(){
-    setNumber1();
-    action = "A";
+
+function btnMultiplication() {
+    addOperator("*");
 }
-function btnSubtraction(){
-    setNumber1();
-    action = "S";
+
+function btnAddition() {
+    addOperator("+");
 }
-//=====================================================================btn Ac Del 
-function btnAc(){
-    document.getElementById("display").value = "";
+
+function btnSubtraction() {
+    addOperator("-");
 }
-function btnDel(){
-    let text = document.getElementById("display").value;
-    document.getElementById("display").value = text.substr(0,text.length-1);    
+
+function addOperator(operator) {
+    let display = getDisplay();
+    let value = display.value.trim();
+
+    if (value === "" || value === "Error") {
+        return;
+    }
+
+    if (/[+\-*/]$/.test(value)) {
+        display.value = value.slice(0, -1) + operator;
+        return;
+    }
+
+    display.value = value + " " + operator + " ";
 }
-//========================================================================btn num
-function setNum9(){
-    document.getElementById("display").value += 9;
+
+function setDot() {
+    let display = getDisplay();
+    let value = display.value;
+
+    if (value === "Error") {
+        display.value = "";
+        return;
+    }
+
+    let parts = value.split(/[+\-*/]/);
+    let currentNumber = parts[parts.length - 1].trim();
+
+    if (currentNumber.includes(".")) {
+        return;
+    }
+
+    if (currentNumber === "" || currentNumber === "!") {
+        display.value += "0.";
+    } else {
+        display.value += ".";
+    }
 }
-function setNum8(){
-    document.getElementById("display").value += 8;
+
+function setNumpi() {
+    let display = getDisplay();
+
+    if (display.value === "Error") {
+        display.value = "";
+    }
+
+    let value = display.value;
+
+    if (value !== "" && /[\dπ!)]$/.test(value)) {
+        display.value += " * π";
+    } else {
+        display.value += "π";
+    }
 }
-function setNum7(){
-    document.getElementById("display").value += 7;
+
+function setFac() {
+    let display = getDisplay();
+    let value = display.value.trim();
+
+    if (value === "" || value === "Error") {
+        return;
+    }
+
+    if (/[+\-*/]\s*$/.test(value)) {
+        return;
+    }
+
+    if (!value.endsWith("!")) {
+        display.value = value + "!";
+    }
 }
-function setNum6(){
-    document.getElementById("display").value += 6;
+
+function btnEnter() {
+    let display = getDisplay();
+    let expression = display.value.trim();
+
+    if (expression === "" || expression === "Error") {
+        return;
+    }
+
+    try {
+        finalNumber = evaluateExpression(expression);
+
+        if (!Number.isFinite(finalNumber)) {
+            throw new Error();
+        }
+
+        finalNumber = formatNumber(finalNumber);
+        display.value = finalNumber;
+
+        number1 = finalNumber;
+        number2 = 0;
+        action = "";
+    } catch (error) {
+        display.value = "Error";
+        number1 = 0;
+        number2 = 0;
+        finalNumber = 0;
+        action = "";
+    }
 }
-function setNum5(){
-    document.getElementById("display").value += 5;
+
+function evaluateExpression(expression) {
+    expression = expression.replace(/π/g, Math.PI.toString());
+    expression = expression.replace(/\s+/g, "");
+
+    let tokens = tokenize(expression);
+    let values = [];
+    let operators = [];
+
+    for (let i = 0; i < tokens.length; i++) {
+        let token = tokens[i];
+
+        if (!isNaN(token)) {
+            values.push(Number(token));
+        } else if (token === "!") {
+            if (values.length === 0) {
+                throw new Error();
+            }
+
+            let value = values.pop();
+
+            if (value < 0 || !Number.isInteger(value)) {
+                throw new Error();
+            }
+
+            values.push(factorial(value));
+        } else if (isOperator(token)) {
+            while (
+                operators.length > 0 &&
+                precedence(operators[operators.length - 1]) >= precedence(token)
+            ) {
+                applyOperator(values, operators.pop());
+            }
+
+            operators.push(token);
+        } else {
+            throw new Error();
+        }
+    }
+
+    while (operators.length > 0) {
+        applyOperator(values, operators.pop());
+    }
+
+    if (values.length !== 1) {
+        throw new Error();
+    }
+
+    return values[0];
 }
-function setNum4(){
-    document.getElementById("display").value += 4;
+
+function tokenize(expression) {
+    let tokens = [];
+    let number = "";
+
+    for (let i = 0; i < expression.length; i++) {
+        let char = expression[i];
+
+        if ((char >= "0" && char <= "9") || char === ".") {
+            number += char;
+        } else if (isOperator(char) || char === "!") {
+            if (number !== "") {
+                if ((number.match(/\./g) || []).length > 1) {
+                    throw new Error();
+                }
+
+                tokens.push(number);
+                number = "";
+            }
+
+            tokens.push(char);
+        } else {
+            throw new Error();
+        }
+    }
+
+    if (number !== "") {
+        if ((number.match(/\./g) || []).length > 1) {
+            throw new Error();
+        }
+
+        tokens.push(number);
+    }
+
+    return tokens;
 }
-function setNum3(){
-    document.getElementById("display").value += 3;
+
+function isOperator(value) {
+    return value === "+" ||
+           value === "-" ||
+           value === "*" ||
+           value === "/";
 }
-function setNum2(){
-    document.getElementById("display").value += 2;
+
+function precedence(operator) {
+    if (operator === "+" || operator === "-") {
+        return 1;
+    }
+
+    if (operator === "*" || operator === "/") {
+        return 2;
+    }
+
+    return 0;
 }
-function setNum1(){
-    document.getElementById("display").value += 1;
+
+function applyOperator(values, operator) {
+    if (values.length < 2) {
+        throw new Error();
+    }
+
+    let number2 = values.pop();
+    let number1 = values.pop();
+    let result;
+
+    switch (operator) {
+        case "+":
+            result = number1 + number2;
+            break;
+
+        case "-":
+            result = number1 - number2;
+            break;
+
+        case "*":
+            result = number1 * number2;
+            break;
+
+        case "/":
+            if (number2 === 0) {
+                throw new Error();
+            }
+
+            result = number1 / number2;
+            break;
+
+        default:
+            throw new Error();
+    }
+
+    values.push(result);
 }
-function setNum0(){
-    document.getElementById("display").value += 0;
+
+function factorial(number) {
+    if (number === 0 || number === 1) {
+        return 1;
+    }
+
+    let result = 1;
+
+    for (let i = 2; i <= number; i++) {
+        result *= i;
+
+        if (!Number.isFinite(result)) {
+            throw new Error();
+        }
+    }
+
+    return result;
 }
-function setNum00(){
-    document.getElementById("display").value += "00";
+
+function formatNumber(number) {
+    if (Number.isInteger(number)) {
+        return number;
+    }
+
+    return Number(number.toFixed(10));
 }
-function setDot(){
-    document.getElementById("display").value += ".";
+
+function setNum9() {
+    addNumber("9");
 }
-function setNumpi(){
-    document.getElementById("display").value += "\u03C0";
+
+function setNum8() {
+    addNumber("8");
+}
+
+function setNum7() {
+    addNumber("7");
+}
+
+function setNum6() {
+    addNumber("6");
+}
+
+function setNum5() {
+    addNumber("5");
+}
+
+function setNum4() {
+    addNumber("4");
+}
+
+function setNum3() {
+    addNumber("3");
+}
+
+function setNum2() {
+    addNumber("2");
+}
+
+function setNum1() {
+    addNumber("1");
+}
+
+function setNum0() {
+    addNumber("0");
+}
+
+function setNum00() {
+    addNumber("00");
 }
